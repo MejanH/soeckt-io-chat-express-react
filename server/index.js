@@ -1,6 +1,8 @@
 const app = require("express")();
+// why http? because socketio requires it
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
+  // enable cors policy so that the frontend host can retrieve data
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -10,7 +12,9 @@ const io = require("socket.io")(http, {
 });
 
 io.on("connection", (socket) => {
+  // just named a connection message so that we can use it on frontend
   socket.on("message", ({ name, message }) => {
+    // this emit method sends the data from server
     io.emit("message", { name, message });
   });
 });

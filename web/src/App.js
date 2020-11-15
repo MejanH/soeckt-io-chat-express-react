@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import io from "socket.io-client";
 
+//this connects the socketio server from express api with having cors permission
 const socket = io.connect("http://localhost:5000");
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [chat, setChat] = useState([]);
 
   useEffect(() => {
+    // this retrieve message connection data from server api
     socket.on("message", ({ name, message }) => {
       setChat([...chat, { name, message }]);
     });
@@ -17,11 +19,16 @@ function App() {
   function onFormSubmit(e) {
     e.preventDefault();
     const { name, message } = data;
+    // this sends data to api server and then the on method retrieves it like
+    // the useEffect function. So, the chat array will have new object with the new message
     socket.emit("message", { name, message });
 
     setData({ message: "", name: "" });
   }
   function onTextChange(e) {
+    // this sets name and message value to data.
+    // it runs twice because we are using on two inputs
+    // so the data will have the current name and message value
     setData({ ...data, [e.target.name]: e.target.value });
   }
 
